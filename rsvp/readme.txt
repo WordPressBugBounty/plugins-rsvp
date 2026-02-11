@@ -2,7 +2,7 @@
 Contributors: wpchill, silkalns
 Tags: rsvp, event management, rsvp management, event registration, calendar
 Requires at least: 5.6
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 5.6
 Stable tag: 2.7.16
 License: GPLv3 or later
@@ -58,6 +58,10 @@ Yes, go to the page associated with the RSVP form and add to the query string th
 * passcode – If passcode is enabled and/or required this will need to be added as well
 
 For example if you have a page that is /rsvp for domain example.com your URL might look like – http://www.example.com/rsvp?firstName=test&lastName=test
+
+= Where do I report security bugs found in this plugin? =
+
+Please report security bugs found in the source code of the RSVP and Event Management Plugin plugin through the [Patchstack Vulnerability Disclosure  Program](https://patchstack.com/database/vdp/9e5fb6b5-84e9-4b63-a0a9-7a4ea551cc68). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin."
 
 == Screenshots ==
 
