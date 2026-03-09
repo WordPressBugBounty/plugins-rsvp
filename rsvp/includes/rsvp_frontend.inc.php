@@ -227,6 +227,7 @@ function rsvp_frontend_prompt_to_edit( $attendee ) {
 	$prompt       .= "<form method=\"post\" action=\"$rsvp_form_action\">\r\n
 		<input type=\"hidden\" name=\"attendeeID\" value=\"" . $attendee->id . '" />
 		<input type="hidden" name="rsvpStep" id="rsvpStep" value="editattendee" />
+		<input type="hidden" name="rsvp_access_nonce" value="' . wp_create_nonce( 'rsvp_access_' . $attendee->id ) . '" />
 		<input type="submit" value="' . __( 'Yes', 'rsvp' ) . "\" onclick=\"document.getElementById('rsvpStep').value='editattendee';\" />
 		<input type=\"submit\" value=\"" . __( 'No', 'rsvp' ) . "\" onclick=\"document.getElementById('rsvpStep').value='newsearch';\"  />
 	</form>\r\n";
@@ -274,6 +275,9 @@ function rsvp_frontend_main_form( $attendee_id, $rsvp_step = 'handleRsvp' ) {
 	$simple_nonce = WPSimpleNonce::createNonce( 'rsvp_fe_form' );
 	$form        .= '	<input type="hidden" name="rsvp_nonce_name" value="' . $simple_nonce['name'] . '" />';
 	$form        .= '	<input type="hidden" name="rsvp_nonce_value" value="' . $simple_nonce['value'] . '" />';
+	if ( $attendee_id > 0 ) {
+		$form .= '	<input type="hidden" name="rsvp_access_nonce" value="' . wp_create_nonce( 'rsvp_access_' . $attendee_id ) . '" />';
+	}
 
 	if ( ! empty( $attendee->personalGreeting ) ) {
 		$form .= rsvp_BeginningFormField( 'rsvpCustomGreeting', '' ) . nl2br( stripslashes_deep( $attendee->personalGreeting ) ) . RSVP_END_FORM_FIELD;
@@ -660,6 +664,8 @@ function rsvp_find( &$output, &$text ) {
 					$output .= "<form method=\"post\" action=\"$rsvp_form_action\">\r\n
 						<input type=\"hidden\" name=\"rsvpStep\" value=\"foundattendee\" />\r\n
 						<input type=\"hidden\" name=\"attendeeID\" value=\"" . $a->id . "\" />\r\n
+												<input type=\"hidden\" name=\"rsvp_access_nonce\" value=\"" . wp_create_nonce( 'rsvp_access_' . $a->id ) . "\" />
+
 						<p class=\"rsvpParagraph\" style=\"text-align:left;\">\r\n
 							" . htmlspecialchars( $a->firstName . ' ' . $a->lastName ) . '
 						<input type="submit" value="' . __( 'RSVP', 'rsvp' ) . "\" />\r\n
@@ -1084,6 +1090,12 @@ function rsvp_handlersvp( &$output, &$text ) {
 	}
 
 	if ( is_numeric( $_POST['attendeeID'] ) && ( absint( $_POST['attendeeID'] ) > 0 ) ) {
+		$attendee_id_check = absint( $_POST['attendeeID'] );
+		if ( ! isset( $_POST['rsvp_access_nonce'] ) ||
+			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rsvp_access_nonce'] ) ), 'rsvp_access_' . $attendee_id_check )
+		) {
+			return rsvp_handle_output( $text, rsvp_frontend_greeting() );
+		}
 		// update their information and what not....
 		if ( strToUpper( sanitize_text_field( wp_unslash( $_POST['mainRsvp'] ) ) ) == 'Y' ) {
 			$rsvp_status = 'Yes';
@@ -1282,6 +1294,12 @@ function rsvp_editAttendee( &$output, &$text ) {
 	global $wpdb;
 
 	if ( is_numeric( $_POST['attendeeID'] ) && ( absint( $_POST['attendeeID'] ) > 0 ) ) {
+		$attendee_id_check = absint( $_POST['attendeeID'] );
+		if ( ! isset( $_POST['rsvp_access_nonce'] ) ||
+			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rsvp_access_nonce'] ) ), 'rsvp_access_' . $attendee_id_check )
+		) {
+			return rsvp_handle_output( $text, rsvp_frontend_greeting() );
+		}
 		// Try to find the user.
 		$attendee = $wpdb->get_row(
 			$wpdb->prepare(
@@ -1313,6 +1331,12 @@ function rsvp_foundAttendee( &$output, &$text ) {
 	global $wpdb;
 
 	if ( is_numeric( $_POST['attendeeID'] ) && ( absint( $_POST['attendeeID'] ) > 0 ) ) {
+		$attendee_id_check = absint( $_POST['attendeeID'] );
+		if ( ! isset( $_POST['rsvp_access_nonce'] ) ||
+			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rsvp_access_nonce'] ) ), 'rsvp_access_' . $attendee_id_check )
+		) {
+			return rsvp_handle_output( $text, rsvp_frontend_greeting() );
+		}
 		$sql      = 'SELECT id, firstName, lastName, rsvpStatus FROM ' . ATTENDEES_TABLE . ' WHERE id = %d';
 		$attendee = $wpdb->get_row( $wpdb->prepare( $sql, absint( $_POST['attendeeID'] ) ) );
 		if ( $attendee != null ) {

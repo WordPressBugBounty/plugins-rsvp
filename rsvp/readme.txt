@@ -4,7 +4,7 @@ Tags: rsvp, event management, rsvp management, event registration, calendar
 Requires at least: 5.6
 Tested up to: 6.9
 Requires PHP: 5.6
-Stable tag: 2.7.16
+Stable tag: 2.7.17
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -70,6 +70,9 @@ Please report security bugs found in the source code of the RSVP and Event Manag
 1. The text you need to add for the rsvp front-end
 
 == Changelog ==
+= 2.7.17 – 09.03.2026 =
+* Fixed: Security update.
+
 = 2.7.16 – 17.04.2025 =
 * Fixed: Load texdomain just in time.
 
