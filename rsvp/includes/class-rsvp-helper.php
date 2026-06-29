@@ -757,7 +757,10 @@ class RSVP_Helper {
 	 * @since 2.7.2
 	 */
 	public function bulk_delete_attendees() {
-		// Check if user has permission
+		if ( ! isset( $_GET['rsvp-bulk-action'] ) && ! isset( $_GET['rsvp-bulk-action2'] ) ) {
+			return;
+		}
+
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( __( 'You do not have sufficient permissions to access this page.', 'rsvp' ) );
 		}
@@ -790,7 +793,10 @@ class RSVP_Helper {
 	 * @since 2.7.2
 	 */
 	public function bulk_delete_questions() {
-		// Check if user has permission
+		if ( ! isset( $_GET['rsvp-bulk-action'] ) && ! isset( $_GET['rsvp-bulk-action2'] ) ) {
+			return;
+		}
+
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( __( 'You do not have sufficient permissions to access this page.', 'rsvp' ) );
 		}

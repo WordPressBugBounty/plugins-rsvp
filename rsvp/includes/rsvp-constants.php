@@ -1,13 +1,27 @@
 <?php
 global $wpdb;
 
+/**
+ * Returns the actual DB table name, falling back to lowercase if the camelCase
+ * version doesn't exist. Needed because Linux MySQL is case-sensitive and some
+ * sites end up with lowercase table names after a local→production migration.
+ */
+function rsvp_resolve_table( $camel_name ) {
+	global $wpdb;
+	$camel = $wpdb->prefix . $camel_name;
+	if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $camel ) ) === $camel ) {
+		return $camel;
+	}
+	return $wpdb->prefix . strtolower( $camel_name );
+}
+
 define( 'ATTENDEES_TABLE', $wpdb->prefix . 'attendees' );
-define( 'ASSOCIATED_ATTENDEES_TABLE', $wpdb->prefix . 'associatedAttendees' );
-define( 'QUESTIONS_TABLE', $wpdb->prefix . 'rsvpCustomQuestions' );
-define( 'QUESTION_TYPE_TABLE', $wpdb->prefix . 'rsvpQuestionTypes' );
-define( 'ATTENDEE_ANSWERS', $wpdb->prefix . 'attendeeAnswers' );
-define( 'QUESTION_ANSWERS_TABLE', $wpdb->prefix . 'rsvpCustomQuestionAnswers' );
-define( 'QUESTION_ATTENDEES_TABLE', $wpdb->prefix . 'rsvpCustomQuestionAttendees' );
+define( 'ASSOCIATED_ATTENDEES_TABLE', rsvp_resolve_table( 'associatedAttendees' ) );
+define( 'QUESTIONS_TABLE', rsvp_resolve_table( 'rsvpCustomQuestions' ) );
+define( 'QUESTION_TYPE_TABLE', rsvp_resolve_table( 'rsvpQuestionTypes' ) );
+define( 'ATTENDEE_ANSWERS', rsvp_resolve_table( 'attendeeAnswers' ) );
+define( 'QUESTION_ANSWERS_TABLE', rsvp_resolve_table( 'rsvpCustomQuestionAnswers' ) );
+define( 'QUESTION_ATTENDEES_TABLE', rsvp_resolve_table( 'rsvpCustomQuestionAttendees' ) );
 define( 'RSVP_FRONTEND_TEXT_CHECK', 'rsvp-pluginhere' );
 define( 'OPTION_GREETING', 'rsvp_custom_greeting' );
 define( 'OPTION_THANKYOU', 'rsvp_custom_thankyou' );

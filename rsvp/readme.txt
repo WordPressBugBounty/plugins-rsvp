@@ -2,9 +2,9 @@
 Contributors: wpchill, silkalns
 Tags: rsvp, event management, rsvp management, event registration, calendar
 Requires at least: 5.6
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 5.6
-Stable tag: 2.7.17
+Stable tag: 2.7.18
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -70,6 +70,11 @@ Please report security bugs found in the source code of the RSVP and Event Manag
 1. The text you need to add for the rsvp front-end
 
 == Changelog ==
+= 2.7.18 – 09.06.2026 =
+* Fixed: Database tables not found on case-sensitive Linux servers.
+* Fixed: Incompatibility with 2FA plugins (e.g. Wordfence).
+* Updated: German translation.
+
 = 2.7.17 – 09.03.2026 =
 * Fixed: Security update.
 

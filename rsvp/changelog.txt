@@ -1,4 +1,9 @@
 == Changelog ==
+= 2.7.18 – 29.06.2026 =
+* Fixed: Database tables not found on case-sensitive Linux servers.
+* Fixed: Incompatibility with 2FA plugins (e.g. Wordfence).
+* Updated: German translation.
+
 = 2.7.17 – 09.03.2026 =
 * Fixed: Security update.
 
